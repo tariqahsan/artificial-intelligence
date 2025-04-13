@@ -4,10 +4,29 @@
       <div class="toolbar-content"></div>
       <span class="company-name">Dar Al Salaam</span><br>
       <span class="spacer"></span>
+      <span class="apiname">API Name: {{apiname}}</span>
+      <span class="spacer"></span>
       <span class="subtitle">Muslim AI Chat</span>
     </mat-toolbar>
   </div>
   <br>
+  <div class="container tab-container">
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         routerLink="/openai"
+         routerLinkActive #rlaOpenai="routerLinkActive"
+         [active]="rlaOpenai.isActive">
+        OpenAI
+      </a>
+      <a mat-tab-link
+         routerLink="/ollama"
+         routerLinkActive #rlaOllama="routerLinkActive"
+         [active]="rlaOllama.isActive">
+        Ollama
+      </a>
+    </nav>
+  </div>
+  
   <div class="container">
     <mat-card>
       <!-- <h2>Ask a Question</h2> -->

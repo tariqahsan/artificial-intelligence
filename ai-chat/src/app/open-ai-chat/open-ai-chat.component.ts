@@ -48,6 +48,7 @@ export class OpenAiChatComponent {
   prompt = new FormControl('');
   responseText = '';
   loading = false;
+  apiname = 'OpenAI';
 
   constructor(private http: HttpClient) {}
 

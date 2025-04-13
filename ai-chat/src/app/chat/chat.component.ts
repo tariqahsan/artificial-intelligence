@@ -3,16 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-ollama-ai-chat',
+  selector: 'app-chat',
   standalone: false,
-  templateUrl: './ollama-ai-chat.component.html',
-  styleUrl: './ollama-ai-chat.component.css'
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
 })
-export class OllamaAiChatComponent {
+export class ChatComponent {
   prompt = new FormControl('');
   responseText = '';
   loading = false;
-  apiname = "Ollama"
 
   constructor(private http: HttpClient) {}
 
@@ -36,5 +35,3 @@ export class OllamaAiChatComponent {
     });
   }
 }
-  
-

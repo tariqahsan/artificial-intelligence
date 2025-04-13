@@ -11,16 +11,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
 import { OpenAiChatComponent } from './open-ai-chat/open-ai-chat.component';
 import { OllamaAiChatComponent } from './ollama-ai-chat/ollama-ai-chat.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [AppComponent, ChatComponent, OpenAiChatComponent, OllamaAiChatComponent],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -30,6 +33,7 @@ import { OllamaAiChatComponent } from './ollama-ai-chat/ollama-ai-chat.component
     MatCardModule,
     MatDividerModule,
     MatToolbarModule,
+    MatTabsModule
   ],
   bootstrap: [AppComponent]
 })

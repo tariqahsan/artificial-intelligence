@@ -135,12 +135,6 @@ mat-footer-row mat-footer-cell {
 
 }
 
-.apiname {
-  font-size: 20px;
-  color: white;
-  font-weight: bold;
-}
-
 /* filter controls */
 .search-div {
   margin: 10px;
@@ -258,15 +252,3 @@ mat-footer-row mat-footer-cell {
   color: #333333;
   /* Sets a nice dark color for contrast */
 }
-
-/* For Tabs */
-.tab-container {
-  margin: 10px 0;
-}
-
-mat-tab-nav-bar {
-  background-color: #e0e0e0;
-  padding-left: 16px;
-  border-radius: 4px;
-}
-
