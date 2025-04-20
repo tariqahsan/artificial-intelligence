@@ -5,7 +5,7 @@
 # app = FastAPI()  # Make sure this is at the top of the file
 
 # # Set your API key here or use an environment variable
-# OPENAI_API_KEY = "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"
+# OPENAI_API_KEY = "your-secret-api-key"
 
 # client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "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")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "your-secret-openai-api-key")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 class ChatRequest(BaseModel):
