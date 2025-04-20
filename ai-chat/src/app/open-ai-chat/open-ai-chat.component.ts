@@ -58,7 +58,8 @@ export class OpenAiChatComponent {
 
     this.loading = true;
     
-    this.http.post<{ response: string }>('http://localhost:8080/api/chat', {
+    // this.http.post<{ response: string }>('http://localhost:8080/api/chat', {
+      this.http.post<{ response: string }>('http://localhost:8000/chat', {
       prompt: userPrompt
     }).subscribe({
       next: res => {
