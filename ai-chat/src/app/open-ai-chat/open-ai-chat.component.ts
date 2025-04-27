@@ -58,8 +58,8 @@ export class OpenAiChatComponent {
 
     this.loading = true;
     
-    // this.http.post<{ response: string }>('http://localhost:8080/api/chat', {
-      this.http.post<{ response: string }>('http://localhost:8000/chat', {
+    // this.http.post<{ response: string }>('http://localhost:8080/api/chat', { // spring boot rest api for openai
+      this.http.post<{ response: string }>('http://localhost:8000/chat', { // python rest api for openai
       prompt: userPrompt
     }).subscribe({
       next: res => {
