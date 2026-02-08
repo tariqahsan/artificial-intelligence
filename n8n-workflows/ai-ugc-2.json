@@ -3,102 +3,37 @@
   "nodes": [
     {
       "parameters": {
-        "resource": "image",
-        "operation": "analyze",
-        "modelId": {
-          "__rl": true,
-          "value": "chatgpt-4o-latest",
-          "mode": "list",
-          "cachedResultName": "CHATGPT-4O-LATEST"
+        "path": "a7e6db1e-e72b-471b-99cb-98d2a8fd6acd",
+        "formTitle": "UGC Ad Generator",
+        "formDescription": "Generates UGC Ad Videos from User Description and Product Photo",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload Image",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".jpg, .png, .jpeg",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Image Description",
+              "requiredField": true
+            }
+          ]
         },
-        "text": "Analyze the given image and determine if it primarily depicts a product or a character, or BOTH.\n\n- If the image is of a product, return the analysis in YAML format with the following fields:\n\nbrand_name: (Name of the brand shown in the image, if visible or inferable)\ncolor_scheme:\n  - hex: (Hex code of each prominent color used)\n    name: (Descriptive name of the color)\nfont_style: (Describe the font family or style used: serif/sans-serif, bold/thin, etc.)\nvisual_description: (A full sentence or two summarizing what is seen in the image, ignoring the background)\n\n- If the image is of a character, return the analysis in YAML format with the following fields:\n\ncharacter_name: (Name of the character if visible or inferable)\ncolor_scheme:\n  - hex: (Hex code of each prominent color used on the character)\n    name: (Descriptive name of the color)\noutfit_style: (Description of clothing style, accessories, or notable features)\nvisual_description: (A full sentence or two summarizing what the character looks like, ignoring the background)\n\nOnly return the YAML. Do not explain or add any other comments.\n\n- If it is BOTH, return both descriptions as guided above in YAML format\n\nProvide a detailed YAML analysis with the following fields:\n\nphysical_appearance:\n\n* gender: (male/female/other)\n* approximate_age: (estimated age range)\n* ethnicity: (observed ethnicity)\n* hair:\n\n  * style: (short, medium, long, bald, etc.)\n  * color: (color description)\n  * texture: (straight, wavy, curly, etc.)\n* facial_features:\n\n  * face_shape: (oval, round, square, etc.)\n  * skin_tone: (light, medium, tan, dark, etc.)\n  * notable_features: (beard, glasses, freckles, dimples, etc.)\n* body_type: (slim, athletic, average, etc.)\n\nexpression:\n\n* mood: (smiling, serious, confident, friendly, etc.)\n* eye_contact: (direct, looking away, etc.)\n\ncurrent_clothing:\n\n* description: (brief description of what they're wearing)\n\nkey_identifiers:\n\n* (list 3–5 unique features that make this person recognizable)\n\nOnly return the YAML. Do not explain or add any other comments.",
-        "imageUrls": "={{ $json.webContentLink }}",
-        "simplify": false,
-        "options": {}
+        "options": {
+          "ignoreBots": true
+        }
       },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 2.1,
+      "id": "5ccf2f68-be41-4e2c-8aa9-f4b2f1404dca",
+      "name": "AI UGC Ad Generator",
+      "type": "n8n-nodes-base.formTrigger",
       "position": [
-        -16,
+        -464,
         -32
       ],
-      "id": "49489036-9796-4262-bda2-3cd934999236",
-      "name": "Analyze Reference Photo",
-      "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "builtInTools": {},
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
-      "position": [
-        32,
-        208
-      ],
-      "id": "56f2ba16-ad05-4aef-9158-ca7b6eb25ded",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://queue.fal.run/fal-ai/nano-banana-pro/edit",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"prompt\": \"{{ $json.output.image_prompt }}\",\n  \"image_urls\": [\n    \"{{ $('Upload to Google Drive').item.json.webContentLink }}\"\n  ],\n  \"resolution\": \"2K\",\n  \"aspect_ratio\": \"16:9\",\n  \"output_format\": \"png\"\n}",
-        "options": {}
-      },
-      "id": "b0a2a219-c3f9-4ca2-af40-b40dd8d31a6a",
-      "name": "Create Image Nano Banana",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        544,
-        -32
-      ],
-      "typeVersion": 4.2,
-      "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        },
-        "httpHeaderAuth": {
-          "id": "lLr87ncvQbQYxJWo",
-          "name": "Fal API Key"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "amount": 40
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        768,
-        -32
-      ],
-      "id": "8bce3452-91ec-4541-874f-8d64d9d6072a",
-      "name": "Wait for Generation",
-      "webhookId": "7555271d-95af-49db-a9b5-859c393effef"
+      "typeVersion": 2,
+      "webhookId": "a7e6db1e-e72b-471b-99cb-98d2a8fd6acd"
     },
     {
       "parameters": {
@@ -135,109 +70,47 @@
     },
     {
       "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "Analyze the given image and determine if it primarily depicts a product or a character, or BOTH.\n\n- If the image is of a product, return the analysis in YAML format with the following fields:\n\nbrand_name: (Name of the brand shown in the image, if visible or inferable)\ncolor_scheme:\n  - hex: (Hex code of each prominent color used)\n    name: (Descriptive name of the color)\nfont_style: (Describe the font family or style used: serif/sans-serif, bold/thin, etc.)\nvisual_description: (A full sentence or two summarizing what is seen in the image, ignoring the background)\n\n- If the image is of a character, return the analysis in YAML format with the following fields:\n\ncharacter_name: (Name of the character if visible or inferable)\ncolor_scheme:\n  - hex: (Hex code of each prominent color used on the character)\n    name: (Descriptive name of the color)\noutfit_style: (Description of clothing style, accessories, or notable features)\nvisual_description: (A full sentence or two summarizing what the character looks like, ignoring the background)\n\nOnly return the YAML. Do not explain or add any other comments.\n\n- If it is BOTH, return both descriptions as guided above in YAML format\n\nProvide a detailed YAML analysis with the following fields:\n\nphysical_appearance:\n\n* gender: (male/female/other)\n* approximate_age: (estimated age range)\n* ethnicity: (observed ethnicity)\n* hair:\n\n  * style: (short, medium, long, bald, etc.)\n  * color: (color description)\n  * texture: (straight, wavy, curly, etc.)\n* facial_features:\n\n  * face_shape: (oval, round, square, etc.)\n  * skin_tone: (light, medium, tan, dark, etc.)\n  * notable_features: (beard, glasses, freckles, dimples, etc.)\n* body_type: (slim, athletic, average, etc.)\n\nexpression:\n\n* mood: (smiling, serious, confident, friendly, etc.)\n* eye_contact: (direct, looking away, etc.)\n\ncurrent_clothing:\n\n* description: (brief description of what they're wearing)\n\nkey_identifiers:\n\n* (list 3–5 unique features that make this person recognizable)\n\nOnly return the YAML. Do not explain or add any other comments.",
+        "imageUrls": "={{ $json.webContentLink }}",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "49489036-9796-4262-bda2-3cd934999236",
+      "name": "Analyze Reference Photo",
+      "credentials": {
+        "openAiApi": {
+          "id": "SEUoxkRNqO49ITxB",
+          "name": "OpenAI Key"
+        }
+      }
+    },
+    {
+      "parameters": {
         "promptType": "define",
-        "text": "=Your task: Create an image prompt as guided by your system guidelines.\n\nMake sure that the reference image is depicted as ACCURATELY as possible in the resulting images, especially in text.\n\nThese are the user's description:\n{{ $('AI UGC Ad Generator').item.json['Image Description'] }}\n\nDescription of the reference image:\n{{ $json['0'].content[0].text }}",
+        "text": "=Create a UGC-style video prompt from the product/reference image analysis and the user description.\n\nUser description:\n{{ $('AI UGC Ad Generator').item.json['Image Description'] }}\n\nDetailed analysis of the uploaded reference image (product details, colors, style — use this to describe the product ACCURATELY in the video scene):\n{{ $json['0'].content[0].text }}\n\nRules:\n- Combine the user description with the product analysis to create a realistic scene.\n- If the user description mentions a person (age, gender, ethnicity), include those EXACT details in the video prompt.\n- Describe the product faithfully using the visual details from the image analysis (color, material, shape, brand markings).\n- Keep the look casual and realistic; avoid studio language.\n- Return only a single JSON object with one key: video_prompt.",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "ROLE: UGC Image Prompt Builder\n\nPurpose: Given an image URL (often a product or reference image), write a short, natural description that can drive an image/video generator.\n\nDefaults:\n- If instructions are vague, place the product with the character in an everyday setting that makes sense for the item.\n- If style or setting isn't specified, assume casual UGC realism.\n\nUGC Realism Principles:\n- Look unstaged and lifelike.\n- Phone-photo vibe: off-center framing, light motion blur, mixed indoor light, slight grain.\n- Embrace imperfections: wrinkles, stray hairs, skin texture, cluttered backgrounds.\n- Keep any visible packaging text exactly as shown. Never invent claims, numbers, or badges.\n\nCamera Cues (use at least 2-3 each time):\n- \"phone snapshot\", \"handheld framing\", \"off-center composition\", \"natural indoor light\", \"soft shadows\", \"slight motion blur\", \"auto exposure\", \"unpolished look\", \"mild grain\"\n\nSafety / Scope:\n- Do not name copyrighted characters.\n- You do not write dialogue or scripts; you only output an image prompt.\n\nOutput Contract:\n- Return only one JSON object:\n  - image_prompt: one string (≤128 words) in plain prose that covers subject, action, mood, setting, style/camera, color notes, and text-accuracy notes.\n\nDiversity Defaults:\n- when people aren't specified, vary gender and ethnicity naturally.\n- Default age range: 21-38.\n- Prefer real-world spaces (home, street, store, gym, office) unless told otherwise.\n\n--- Examples ---\n\nGood example 1:\n{\"image_prompt\": \"a young adult casually holding a skincare tube near a bathroom mirror; action: dabs a small amount on the back of the hand; mood: morning; setting: small modern bathroom (white tiles and succulents on shelf); style/camera: phone snapshot, handheld framing, off-center composition, natural window light, slight motion blur, mild grain; color: soft neutrals (white, cream, pale green); text-accuracy note: the tube says exactly as visible, no added claims\"}\n\nGood example 2:\n{\"image_prompt\": \"commuter wearing wireless earbuds while running the charging case; action: steps out of subway exit; mood: in-the-moment; setting: blurry sidewalk passerby and glass reflections; style/camera: phone snapshot, handheld framing, off-center composition, natural daylight, slight motion blur, mild grain; color: urban grays and metallic; text-accuracy note: preserve logo and model name precisely\"}\n\nBad example (avoid):\n- Fabricating certifications or numbers on packaging\n- Studio-perfect lighting or ad-speak like \"luxurious masterpiece\"\n- Returning anything other than the required keys\n\nPre-send checklist:\n- Natural, handheld tone? ✓\n- At least two camera cues included? ✓\n- People described inclusively? ✓\n- Only image_prompt returned? ✓\n"
+          "systemMessage": "ROLE: UGC Video Prompt Builder\n\nGoal\n- From a product/reference image analysis and user notes, write a natural UGC-style video prompt suited for Veo3 text-to-video generation with audio.\n\nCRITICAL — Faithfulness to Inputs\n- You will receive a detailed image analysis (product details, colors, materials, style). Describe the product EXACTLY as analyzed.\n- You will receive a user description that may specify: who the person is (age, gender, ethnicity), what they are doing, and the context. Follow these details EXACTLY.\n- If the user says \"35 year old middle eastern male\", the prompt MUST describe a 35-year-old middle eastern male. NEVER substitute a different person.\n- If the image shows a brown leather armchair with brass nailhead trim, describe that exact chair — not a generic couch.\n\nPrinciples (UGC look)\n- Phone-video vibe: handheld, slight motion, off-center framing, mixed indoor light, mild grain.\n- Real life over polish: small flaws, lived-in spaces, ambient sound.\n- The person should be talking naturally, as if recording a casual review or story for social media.\n- Keep any visible product text/branding accurate. Never invent claims, badges, or numbers.\n- Sound conversational, not ad-speak.\n\nOutput Contract\n- Return ONLY a single JSON object:\n  - \"video_prompt\": one plain paragraph (≤ 128 words) describing:\n    1. The person (exact demographics from user description + natural clothing/appearance)\n    2. What they're doing (talking, gesturing, interacting with the product)\n    3. The product (exact details from image analysis — material, color, shape, distinguishing features)\n    4. The setting (a realistic room/environment that fits the product)\n    5. Mood (casual, friendly, authentic)\n    6. 2-3 camera cues (handheld framing, natural light, mild grain, etc.)\n    7. Color notes\n\n- No code fences, no extra keys, no arrays, no headings.\n\nFraming guardrails:\n- Keep the subject fully inside frame at all times (no forehead or chin cutoffs).\n- Show both the person AND the product clearly in frame.\n- Maintain medium shot composition — waist up or wider to show the person with the product.\n\nGood Examples\n1)\n{\n\"video_prompt\": \"a 35-year-old middle eastern man with short dark hair and light stubble sits in a dark brown leather executive armchair with brass nailhead trim and padded arms, gesturing expressively as he talks about his new chair; he wears a casual olive crewneck and jeans; setting: warm living room with wooden bookshelves filled with books, potted plants on the windowsill, a mustard throw blanket draped over a nearby seat; mood: friendly and unscripted; camera: handheld framing, natural indoor light from a window, mild grain; color notes: rich brown leather, warm wood tones, green plants, golden lamp glow\"\n}\n\n2)\n{\n\"video_prompt\": \"a young woman in her late 20s holds up a matte black wireless speaker with a fabric-wrapped front and silver logo, turning it slightly to show the side ports; she sits cross-legged on a couch in a small apartment; mood: casual excitement; camera: handheld, off-center composition, soft daylight from a nearby window; color notes: black speaker against cream couch, warm neutral walls\"\n}\n\nBad Examples\nA) Changing the person's gender, age, or ethnicity from what the user specified.\nB) Describing a generic \"couch\" when the image analysis shows a specific leather executive armchair.\nC) Using studio language like \"luxurious\", \"premium\", \"masterpiece\"."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
         208,
-        -32
-      ],
-      "id": "01b405b1-f082-4500-9b70-e6cad0f3e8cf",
-      "name": "3D Form Prompt"
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n\t\"image_prompt\": \"string\"\n}",
-        "autoFix": true
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        288,
-        192
-      ],
-      "id": "117208a2-d8eb-405e-aee6-c8b7e2627d0e",
-      "name": "Structured Output Parser"
-    },
-    {
-      "parameters": {
-        "url": "=https://queue.fal.run/fal-ai/nano-banana-pro/requests/{{ $json.request_id }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "options": {}
-      },
-      "id": "9650d43a-bba6-4314-a3e6-204408bd89a9",
-      "name": "Get Generated Image",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [
-        960,
-        -32
-      ],
-      "typeVersion": 4.2,
-      "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        },
-        "httpHeaderAuth": {
-          "id": "lLr87ncvQbQYxJWo",
-          "name": "Fal API Key"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "path": "a7e6db1e-e72b-471b-99cb-98d2a8fd6acd",
-        "formTitle": "UGC Ad Generator",
-        "formDescription": "Generators UGC Ads from User Description and Photo",
-        "formFields": {
-          "values": [
-            {
-              "fieldLabel": "Upload Image",
-              "fieldType": "file",
-              "multipleFiles": false,
-              "acceptFileTypes": ".jpg, .png, .jpeg",
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "Image Description",
-              "requiredField": true
-            }
-          ]
-        },
-        "options": {
-          "ignoreBots": true
-        }
-      },
-      "id": "5ccf2f68-be41-4e2c-8aa9-f4b2f1404dca",
-      "name": "AI UGC Ad Generator",
-      "type": "n8n-nodes-base.formTrigger",
-      "position": [
-        -464,
-        -32
-      ],
-      "typeVersion": 2,
-      "webhookId": "a7e6db1e-e72b-471b-99cb-98d2a8fd6acd"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Create a UGC-style video prompt from the reference image analysis and the user description.\n\nUser description:\n{{ $('AI UGC Ad Generator').item.json['Image Description'] }}\n\nDetailed character and scene analysis from reference photo (YOU MUST match these details exactly — gender, ethnicity, age, clothing, setting, features):\n{{ $('Analyze Reference Photo').item.json['0'].content[0].text }}\n\nGenerated image URL for reference:\n{{ $json.images[0].url }}\n\nRules:\n- The video MUST depict the EXACT same person described in the character analysis above. Do NOT change gender, ethnicity, age, or any physical features.\n- Keep the look casual and realistic; avoid studio language.\n- Default model: veo3_fast unless stated otherwise.\n- Return only a single JSON object: video_prompt.",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "ROLE: UGC Video Prompt Builder\n\nGoal\n- From a character/scene analysis and short user notes, write a natural UGC-style video prompt suited for Veo3/Veo3_fast.\n\nCRITICAL — Character Faithfulness\n- You will receive a detailed character analysis (gender, ethnicity, age, hair, facial features, clothing, body type). You MUST reproduce these details EXACTLY in the video prompt.\n- NEVER substitute a different gender, ethnicity, or age. If the analysis says \"male, middle eastern, ~35\", the video prompt MUST describe a male middle eastern person in their mid-30s.\n- Include specific physical details (hair color/style, skin tone, facial hair, clothing) from the analysis.\n- Include the setting/environment details from the analysis and user description.\n\nPrinciples (UGC look)\n- Phone-video vibe: handheld, slight motion, off-center framing, mixed indoor light, mild grain.\n- Real life over polish: small flaws, lived-in spaces, ambient sound.\n- Keep any visible packaging text accurate. Never invent claims, badges, or numbers. Don't name copyrighted characters.\n- Sound conversational, not ad-speak.\n\nOutput Contract\n- Return ONLY a single JSON object:\n  - \"video_prompt\": one plain sentence/short paragraph (≤ 128 words) describing subject (with exact physical details from analysis), action, mood, setting, 2-3 camera cues, and color notes.\n\n- No code fences, no extra keys, no arrays, no headings.\n- Do not fabricate product text; mention accuracy only if relevant.\n- Keep it one scene implied by the single object.\n\nFraming guardrails:\n- Keep the subject fully inside frame at all times (no forehead or chin cutoffs).\n- Maintain centered composition; avoid extreme close-ups.\n- If the prompt implies movement, keep framing locked on the face and product.\n\nGood Examples\n1)\n{\n\"video_prompt\": \"a 35-year-old middle eastern man with short dark hair and light stubble sits in a brown leather armchair, gesturing with his hands as he talks casually about a recent purchase; setting: cozy living room with bookshelves, potted plants, and warm lamp light; mood: friendly and unscripted; camera: handheld framing, off-center composition, natural indoor light, mild grain; color notes: warm browns from leather, olive green sweater, soft golden tones from lamp\"\n}\n\n2)\n{\n\"video_prompt\": \"commuter steps out of a station, adjusts wireless earbuds, glances at phone, then pockets it and walks toward light; setting: busy sidewalk with glass reflections; mood: in-the-moment; camera: handheld framing, slight motion blur, natural outdoor light; color notes: charcoal earbuds and silver accents stand out; keep logo text exactly as seen on the case\"\n}\n\n---\n\nBad Examples\nA) Changing the subject's gender or ethnicity from what the analysis describes.\nB)\n{\n\"scenes\": [{ \"video_prompt\": \"...\"}],\n\"duration\": 8\n}\n→ Wrong: uses an array and extra keys; violates single-object contract."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3,
-      "position": [
-        1168,
         -32
       ],
       "id": "e0317831-5ef7-4661-9675-e92e8b913da7",
@@ -256,8 +129,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        992,
-        240
+        32,
+        208
       ],
       "id": "4a551a18-e2a5-40da-9aee-d175ef4c1c85",
       "name": "OpenAI Chat Model1",
@@ -276,8 +149,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1248,
-        224
+        288,
+        208
       ],
       "id": "05cddcbe-c1c3-4163-bd8e-eecd324415cc",
       "name": "Structured Output Parser1"
@@ -285,27 +158,23 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://queue.fal.run/fal-ai/veo3/image-to-video",
+        "url": "https://queue.fal.run/fal-ai/veo3/fast",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n     \"image_url\": \"{{ $('Get Generated Image').item.json.images[0].url }}\",\n     \"prompt\": \"{{ $json.output.video_prompt }}\",\n     \"aspect_ratio\": \"auto\",\n     \"duration\": \"8s\",\n     \"generate_audio\": true\n   }",
+        "jsonBody": "={\n  \"prompt\": \"{{ $json.output.video_prompt }}\",\n  \"duration\": \"8s\",\n  \"aspect_ratio\": \"16:9\",\n  \"generate_audio\": true,\n  \"enhance_prompt\": false\n}",
         "options": {}
       },
       "id": "693fcc9f-cf17-429e-b630-35f398be2499",
-      "name": "Create Image Nano Banana1",
+      "name": "Submit Video Generation",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        1456,
+        448,
         -32
       ],
       "typeVersion": 4.2,
       "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        },
         "httpHeaderAuth": {
           "id": "lLr87ncvQbQYxJWo",
           "name": "Fal API Key"
@@ -314,12 +183,12 @@
     },
     {
       "parameters": {
-        "amount": 40
+        "amount": 60
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1616,
+        648,
         -32
       ],
       "id": "268d0203-9c59-4895-a4ca-78507ec39396",
@@ -328,7 +197,7 @@
     },
     {
       "parameters": {
-        "url": "=https://queue.fal.run/fal-ai/veo3/image-to-video/requests/{{ $('Create Image Nano Banana1').item.json.request_id }}",
+        "url": "=https://queue.fal.run/fal-ai/veo3/fast/requests/{{ $('Submit Video Generation').item.json.request_id }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {}
@@ -337,15 +206,11 @@
       "name": "Get Generated Video",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        1776,
+        848,
         -32
       ],
       "typeVersion": 4.2,
       "credentials": {
-        "openAiApi": {
-          "id": "SEUoxkRNqO49ITxB",
-          "name": "OpenAI Key"
-        },
         "httpHeaderAuth": {
           "id": "lLr87ncvQbQYxJWo",
           "name": "Fal API Key"
@@ -355,38 +220,11 @@
   ],
   "pinData": {},
   "connections": {
-    "Analyze Reference Photo": {
+    "AI UGC Ad Generator": {
       "main": [
         [
           {
-            "node": "3D Form Prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Structured Output Parser",
-            "type": "ai_languageModel",
-            "index": 0
-          },
-          {
-            "node": "3D Form Prompt",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait for Generation": {
-      "main": [
-        [
-          {
-            "node": "Get Generated Image",
+            "node": "Upload to Google Drive",
             "type": "main",
             "index": 0
           }
@@ -404,44 +242,11 @@
         ]
       ]
     },
-    "3D Form Prompt": {
+    "Analyze Reference Photo": {
       "main": [
         [
           {
-            "node": "Create Image Nano Banana",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Structured Output Parser": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "3D Form Prompt",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Image Nano Banana": {
-      "main": [
-        [
-          {
-            "node": "Wait for Generation",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI UGC Ad Generator": {
-      "main": [
-        [
-          {
-            "node": "Upload to Google Drive",
+            "node": "Video Prompt Generator",
             "type": "main",
             "index": 0
           }
@@ -475,22 +280,22 @@
         ]
       ]
     },
-    "Create Image Nano Banana1": {
+    "Video Prompt Generator": {
       "main": [
         [
           {
-            "node": "Wait for Video Generation",
+            "node": "Submit Video Generation",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Video Prompt Generator": {
+    "Submit Video Generation": {
       "main": [
         [
           {
-            "node": "Create Image Nano Banana1",
+            "node": "Wait for Video Generation",
             "type": "main",
             "index": 0
           }
@@ -502,17 +307,6 @@
         [
           {
             "node": "Get Generated Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Generated Image": {
-      "main": [
-        [
-          {
-            "node": "Video Prompt Generator",
             "type": "main",
             "index": 0
           }
