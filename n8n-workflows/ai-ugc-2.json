@@ -285,12 +285,12 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://queue.fal.run/fal-ai/veo3",
+        "url": "https://queue.fal.run/fal-ai/veo3/image-to-video",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n     \"image_url\": \"{{ $('Get Generated Image').item.json.images[0].url }}\",\n     \"prompt\": \"{{ $json.output.video_prompt }}\",\n     \"model\": \"veo3_fast\"\n   }",
+        "jsonBody": "={\n     \"image_url\": \"{{ $('Get Generated Image').item.json.images[0].url }}\",\n     \"prompt\": \"{{ $json.output.video_prompt }}\",\n     \"aspect_ratio\": \"auto\",\n     \"duration\": \"8s\",\n     \"generate_audio\": true\n   }",
         "options": {}
       },
       "id": "693fcc9f-cf17-429e-b630-35f398be2499",
@@ -328,7 +328,7 @@
     },
     {
       "parameters": {
-        "url": "=https://queue.fal.run/fal-ai/veo3/requests/{{ $('Create Image Nano Banana1').item.json.request_id }}",
+        "url": "=https://queue.fal.run/fal-ai/veo3/image-to-video/requests/{{ $('Create Image Nano Banana1').item.json.request_id }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "options": {}
