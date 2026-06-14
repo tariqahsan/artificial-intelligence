@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  pythonapp:
+    build: ./app
+    container_name: pythonapp
+    depends_on:
+      - ollama
+    ports:
+      - "5000:5000"
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+
+volumes:
+  ollama_data:

@@ -1,0 +1,146 @@
+{
+  "name": "home-inventory-chat",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -64,
+        -16
+      ],
+      "id": "f6d779a2-8d3e-4913-ab8a-056c50a22c6e",
+      "name": "When chat message received",
+      "webhookId": "d9296e7e-248b-41b4-9503-db0274d4d095"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a home inventory assistant managing a MySQL database.\nDatabase: n8ndb, Table: goods\nColumns: id (INT PK auto-increment), item_name (VARCHAR), current_quantity (INT), inventory_threshold (INT)\n\nIMPORTANT: Always generate COMPLETE, valid SQL. Never truncate a query.\n\nTo READ data use the Select tool.\n\nTo INSERT a new item, use Execute SQL tool with this EXACT format:\nINSERT INTO n8ndb.goods (item_name, current_quantity, inventory_threshold) VALUES ('ItemName', quantity_number, threshold_number);\n\nTo UPDATE quantity, use Execute SQL tool with this EXACT format:\nUPDATE n8ndb.goods SET current_quantity = number WHERE item_name = 'ItemName';\n\nExample INSERT: INSERT INTO n8ndb.goods (item_name, current_quantity, inventory_threshold) VALUES ('Milk', 2, 3);\nExample UPDATE: UPDATE n8ndb.goods SET current_quantity = 5 WHERE item_name = 'Coffee';\n\nAlways confirm the action after executing.\n\nCRITICAL: Always use single quotes for string values in SQL, never double quotes or escaped quotes.\nCORRECT:   INSERT INTO n8ndb.goods (item_name, current_quantity, inventory_threshold) VALUES ('Milk', 2, 3);\nINCORRECT: INSERT INTO n8ndb.goods (item_name, current_quantity, inventory_threshold) VALUES (\\\"Milk\\\", 2, 3);"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "7d728c2f-faf4-4555-b6ac-ad2779192456",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        128
+      ],
+      "id": "c49d0413-af12-45eb-b386-a0a12f312b5c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        112,
+        128
+      ],
+      "id": "64c497d1-17ce-45b2-b036-69a7536eeb21",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "AM86vZHnHgyQskbM",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $fromAI('query', 'A valid SQL query - SELECT, INSERT, or UPDATE against n8ndb.goods table') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySqlTool",
+      "typeVersion": 2.5,
+      "position": [
+        448,
+        128
+      ],
+      "id": "1050c5a0-f6a8-4b6c-b79c-48f3f9505bfa",
+      "name": "Execute a SQL query in MySQL",
+      "credentials": {
+        "mySql": {
+          "id": "SC7z6K85llDSMSC4",
+          "name": "MySQL account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query in MySQL": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ec35406c-94f4-45a4-8651-655d46648543",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "812789840dde5cc4eb57211700f680b778b5567eb75564b0fb1b2e80b538810c"
+  },
+  "nodeGroups": [],
+  "id": "7hulyRmEtuohVOgt",
+  "tags": []
+}

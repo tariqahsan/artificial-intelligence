@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "your openai secret api key")
+#OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "your openai secret api key")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 class ChatRequest(BaseModel):

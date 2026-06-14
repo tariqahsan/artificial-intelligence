@@ -1,0 +1,198 @@
+{
+  "name": "home-inventory-chat",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [-384, -80],
+      "id": "5bc47676-6e9f-4ad1-8466-7008f464d176",
+      "name": "When chat message received",
+      "webhookId": "d9296e7e-248b-41b4-9503-db0274d4d095"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a home inventory assistant. You can search for items in the inventory and update their quantities. The MySQL database has a table called `goods` with columns: `id` (INT, primary key, auto increment), `item_name` (VARCHAR), `current_quantity` (INT), `inventory_threshold` (INT). When searching, use SELECT queries. When updating quantities, use UPDATE queries. Always search first before updating to confirm the item exists and retrieve its current state."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [-128, -80],
+      "id": "bc3633cd-e3b2-49ad-a3e6-b84fa53b7203",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [-208, 144],
+      "id": "0cba83fc-c8e9-4457-aae2-f1db4af2883d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "SEUoxkRNqO49ITxB",
+          "name": "OpenAI Key"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [-48, 144],
+      "id": "fca206d2-3aa8-4d91-83c8-846b82792109",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Search/query records from the MySQL home inventory database. Use this to look up items, check quantities, or find items below threshold. Input must be a valid SQL SELECT statement against the `goods` table which has columns: id, item_name, current_quantity, inventory_threshold.",
+        "operation": "executeQuery",
+        "query": "={{ $fromAI('query', 'A valid SQL SELECT statement to search the goods table. Example: SELECT * FROM goods WHERE item_name LIKE \\'%soap%\\'', 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mysqlTool",
+      "typeVersion": 2.4,
+      "position": [112, 144],
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "MySQL Search",
+      "credentials": {
+        "mySql": {
+          "id": "REPLACE_WITH_YOUR_MYSQL_CREDENTIAL_ID",
+          "name": "MySQL Home Inventory"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Update the quantity of an existing item in the MySQL home inventory database. Use this after searching to confirm the item exists. Input must be a valid SQL UPDATE statement against the `goods` table. Only update current_quantity unless explicitly asked to change the threshold.",
+        "operation": "executeQuery",
+        "query": "={{ $fromAI('query', 'A valid SQL UPDATE statement to modify an item quantity. Example: UPDATE goods SET current_quantity = 5 WHERE id = 3', 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mysqlTool",
+      "typeVersion": 2.4,
+      "position": [240, 144],
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "MySQL Update",
+      "credentials": {
+        "mySql": {
+          "id": "REPLACE_WITH_YOUR_MYSQL_CREDENTIAL_ID",
+          "name": "MySQL Home Inventory"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatXAiGrok",
+      "typeVersion": 1,
+      "position": [464, 48],
+      "id": "c7ea6144-29ba-47a2-a6c9-6e1046089e2b",
+      "name": "xAI Grok Chat Model"
+    },
+    {
+      "parameters": {
+        "model": "mistral:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [-368, 144],
+      "id": "688496bc-4c1d-4867-9ea9-56eb7b8fa684",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "sw71nyR0neMvqvDU",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL Update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "25603b84-fd90-4f24-a8dd-446375bf1cf1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c947dffc35567a468d491172c9cf5cc935d2c8cfa5de2264df8af7c8b1b6284"
+  },
+  "id": "JeiUVwalXp5BwVfR",
+  "tags": []
+}

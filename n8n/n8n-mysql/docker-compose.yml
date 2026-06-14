@@ -1,0 +1,87 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: n8n-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mma123
+      MYSQL_DATABASE: n8ndb
+      MYSQL_USER: n8nuser
+      MYSQL_PASSWORD: mma123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmma123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  ollama-pull-mistral:
+    image: ollama/ollama:latest
+    container_name: ollama-pull-mistral
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint: >
+      sh -c "sleep 15 && ollama pull mistral"
+    restart: "no"
+
+  ollama-pull-llama3:
+    image: ollama/ollama:latest
+    container_name: ollama-pull-llama3
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint: >
+      sh -c "sleep 15 && ollama pull llama3.2"
+    restart: "no"
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      ollama-pull-mistral:
+        condition: service_completed_successfully
+      ollama-pull-llama3:
+        condition: service_completed_successfully
+    ports:
+      - "5678:5678"
+    environment:
+      DB_TYPE: mysqldb
+      DB_MYSQLDB_HOST: mysql
+      DB_MYSQLDB_PORT: 3306
+      DB_MYSQLDB_DATABASE: n8ndb
+      DB_MYSQLDB_USER: n8nuser
+      DB_MYSQLDB_PASSWORD: mma123
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678/
+      GENERIC_TIMEZONE: America/New_York
+      N8N_ENCRYPTION_KEY: change_this_to_a_random_secret_key
+      N8N_RUNNERS_ENABLED: "true"
+      OLLAMA_BASE_URL: http://ollama:11434
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  mysql_data:
+  n8n_data:
+  ollama_data:
